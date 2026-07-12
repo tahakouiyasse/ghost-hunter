@@ -1,0 +1,36 @@
+[package]
+name = "poc1-closure-enclosure"
+version = "1.0.18"
+edition = "2021"
+description = "Ghost-Hunter §5.6 PoC — compiler-enforced key destruction via closure enclosure"
+
+# NOTE ON SCOPE: the real spec (§0 Design Invariants) mandates #![no_std],
+# panic = "abort", and zero dynamic allocation, because the real system runs
+# on a Hubris microkernel task. This PoC is explicitly NOT that system — it
+# is a standalone demonstration, runnable on any Linux machine with stable
+# Rust, of the ONE mechanism §5.6 introduces: the type-level and borrow-
+# checker-level enforcement that makes SecretKeyBuffer un-escapable from
+# with_reconstructed_key's closure. `std` is used only for println!-based
+# demonstration output in main.rs and for the compile-fail harness (which
+# shells out to rustc directly — see verify_compile_fail.sh — rather than
+# pulling in an external crate, so this PoC has zero dependencies) — the
+# core types in `src/lib.rs` do not touch anything std-specific, and would
+# compile equally under `#![no_std]` with a panic handler supplied.
+
+[lib]
+name = "poc1_closure_enclosure"
+path = "src/lib.rs"
+
+[[bin]]
+name = "demo"
+path = "src/main.rs"
+
+[profile.release]
+# Mirrors the real spec's build profile (§6) as closely as makes sense for
+# a standalone binary: Fat-LTO and codegen-units=1 are the settings that
+# make dead-code and inlining decisions closest to what the real Hubris
+# build would do, which matters if you later extend this PoC with a
+# disassembly check in the spirit of §8.10.
+codegen-units = 1
+lto = true
+opt-level = "s"

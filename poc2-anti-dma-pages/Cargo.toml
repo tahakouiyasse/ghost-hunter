@@ -1,0 +1,30 @@
+[package]
+name = "poc2-anti-dma-pages"
+version = "1.0.18"
+edition = "2021"
+description = "Ghost-Hunter §5.2 PoC — linker-level 4KB page confinement for split key shares"
+
+# SCOPE NOTE: real spec target is thumbv7em-none-eabihf under Hubris. This
+# PoC targets the host's own native triple (x86_64-unknown-linux-gnu, or
+# whatever `rustc --print host-tuple` reports) so it can be inspected with
+# ordinary Linux binutils (objdump/nm/readelf) without a cross-toolchain.
+# The property under test — "these two #[repr(align(4096))] statics land on
+# different, non-adjacent 4096-byte-aligned pages in the linked binary" —
+# is a property of ELF layout and linker behavior, not of the target
+# architecture, so it transfers.
+
+[lib]
+name = "poc2_anti_dma_pages"
+path = "src/lib.rs"
+crate-type = ["staticlib", "rlib"]
+
+[[bin]]
+name = "demo"
+path = "src/main.rs"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+panic = "abort"
+strip = false  # explicit: do NOT strip — needed for nm/objdump symbol inspection (mirrors §7's operator-observability requirement)

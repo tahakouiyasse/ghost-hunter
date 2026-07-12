@@ -1,0 +1,18 @@
+[package]
+name = "poc3-fault-injection"
+version = "1.0.18"
+edition = "2021"
+description = "Ghost-Hunter §3.2 PoC — glitch-resistant boolean, Hamming distance 32, exhaustive TryFrom<u32>"
+
+[lib]
+name = "poc3_fault_injection"
+path = "src/lib.rs"
+
+[[bin]]
+name = "laser"
+path = "src/main.rs"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
