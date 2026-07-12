@@ -1,0 +1,96 @@
+name: rust
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  poc1-closure-enclosure:
+    name: "PoC 1 — Closure Enclosure"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rust: ["1.75.0", stable]
+    defaults:
+      run:
+        working-directory: poc1-closure-enclosure
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust ${{ matrix.rust }}
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.rust }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: poc1-closure-enclosure -> target
+
+      - name: Runtime demo (reconstruct, use, zeroize)
+        run: cargo run --release
+
+      - name: Compile-fail proof (3/3 escapes must be rejected)
+        run: |
+          chmod +x ./verify_compile_fail.sh
+          ./verify_compile_fail.sh
+
+  poc2-anti-dma-pages:
+    name: "PoC 2 — Anti-DMA Page Splitting"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rust: ["1.75.0", stable]
+    defaults:
+      run:
+        working-directory: poc2-anti-dma-pages
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust ${{ matrix.rust }}
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.rust }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: poc2-anti-dma-pages -> target
+
+      - name: Build and verify page separation (nm, objdump, readelf)
+        run: |
+          chmod +x ./verify_page_split.sh
+          ./verify_page_split.sh
+
+  poc3-fault-injection:
+    name: "PoC 3 — Fault-Injection Immunity"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rust: ["1.75.0", stable]
+    defaults:
+      run:
+        working-directory: poc3-fault-injection
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust ${{ matrix.rust }}
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.rust }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: poc3-fault-injection -> target
+
+      - name: Automated fault-injection gate (200,000-trial property, CI-friendly)
+        run: cargo test --release
