@@ -1,7 +1,7 @@
 # Ghost-Hunter : Compiler-Enforced Security Defenses
 
 Author: Taha Kouiyasse — Systems Architect<br>
-White Paper: [`PDF`](docs/WP_Critical_Infrastructures.pdf)
+White Paper: [`PDF`](docs/WP_Critical_Infrastructures.pdf)<br>
 Target: Hubris microkernel (Oxide Computer Company)<br>
 License: Apache License 2.0
 
