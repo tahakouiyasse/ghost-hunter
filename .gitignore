@@ -1,0 +1,10 @@
+# --- Rust Cache & Binaries ---
+/target/
+
+# --- Operating System Files ---
+.DS_Store
+Thumbs.db
+
+# --- Backup Files ---
+*.rs.bk
+*.swp
