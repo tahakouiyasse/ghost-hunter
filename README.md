@@ -1,6 +1,8 @@
 # Ghost-Hunter : Compiler-Enforced Security Defenses
 
-**Author:** Taha Kouiyasse — Systems Architect · **White Paper:** [WP_Critical_Infrastructures.pdf](docs/WP_Critical_Infrastructures.pdf) · **Target:** Hubris microkernel (Oxide Computer Company) · **License:** Apache License 2.0
+**Author:** Taha Kouiyasse — Systems Architect · 
+**White Paper:** [WP_Critical_Infrastructures.pdf](docs/WP_Critical_Infrastructures.pdf) · 
+**Target:** Hubris microkernel (Oxide Computer Company) · **License:** Apache License 2.0
 
 A declarative architecture for an inline cryptographic boundary controller targeting Oxide Computer Company's Hubris microkernel, specifying Rust type-system and linker-level constraints intended to convert specific classes of implementer error and physical hardware fault into compile-time rejections or exhaustively-typed runtime error states. The architecture assumes the host CPU platform itself — not merely the operating system or application layer — may be adversarial.
 
